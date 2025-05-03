@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <nav>
+        <a th:href="@{/}">← На главную</a>
+        <h1 th:text="${post.title}"></h1>
+    </nav>
+</header>
+
+<main>
+    <article class="post-card">
+        <div class="post-meta">
+            <p th:if="${post.createdAt != null}">
+                <span>Создан </span>
+                <span th:text="${#temporals.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+            </p>
+            <p th:if="${post.updatedAt != null}">
+                <span>Обновлён </span>
+                <span th:text="${#temporals.format(post.updatedAt, 'dd.MM.yyyy HH:mm')}"></span>
+            </p>
+        </div>
+        <div class="post-content" th:utext="${post.content} ?: ''"></div>
+    </article>
+
+    <section class="comment-form">
+        <h2>Написать комментарий</h2>
+        <form th:action="@{/comments/{postId}(postId=${post.id})}" method="post">
+            <textarea name="text" required></textarea>
+            <button type="submit">Отправить</button>
+        </form>
+    </section>
+
+    <section class="comments">
+        <h2>Комментарии</h2>
+        <div class="comment" th:each="comment : ${comments}">
+            <p th:if="${comment.createdAt != null}">
+                <span>Отправлен </span>
+                <span th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+            </p>
+            <p th:text="${comment.text}"></p>
+        </div>
+    </section>
+</main>
+</body>
+</html>

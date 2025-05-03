@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой блог</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <nav>
+        <h1>Мой блог</h1>
+        <a href="/posts/new" class="button">Новый пост</a>
+    </nav>
+</header>
+
+<main>
+    <div class="post-card" th:each="post : ${posts}">
+        <h2 class="post-title" th:text="${post.title}"></h2>
+<!--        <p th:text="${post.content}"></p>-->
+        <a th:href="@{|/posts/${post.id}|}">Читать далее</a>
+    </div>
+</main>
+</body>
+</html>
