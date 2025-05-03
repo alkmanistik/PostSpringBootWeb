@@ -7,12 +7,16 @@ import com.alkmanistik.springalkmanistikwebsite.repository.CommentRepository;
 import com.alkmanistik.springalkmanistikwebsite.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheManager = "redisCacheManager")
 @RequiredArgsConstructor
 public class CommentService {
 
@@ -24,6 +28,7 @@ public class CommentService {
     }
 
     @Transactional
+    @Cacheable(value = "comment", key = "#comment.id")
     public Comment createComment(Comment comment, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundPostException("Post not found"));
@@ -38,15 +43,18 @@ public class CommentService {
     }
 
     @Transactional
+    @CacheEvict(value = "comment", key = "#id")
     public void deleteById(Long id) {
         commentRepository.deleteById(id);
     }
 
     @Transactional
+    @CacheEvict(value = "commentByPostId", key = "#postId")
     public void deleteByPostId(Long postId) {
         commentRepository.deleteByPostId(postId);
     }
 
+    @Cacheable(value = "commentByPostId", key = "#postId")
     public List<Comment> findAllByPostId(Long postId) {
         return commentRepository.findAllByPostIdOrderByCreatedAtDesc(postId);
     }

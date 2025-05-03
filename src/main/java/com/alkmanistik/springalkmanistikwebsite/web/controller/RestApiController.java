@@ -40,8 +40,7 @@ public class RestApiController {
             @PathVariable Long id,
             @RequestBody PostDto postDto
     ) {
-        postDto.setId(id);
-        return ResponseEntity.ok(postService.updatePost(postDto));
+        return ResponseEntity.ok(postService.updatePost(postDto, id));
     }
 
     @DeleteMapping("/posts/{id}")
