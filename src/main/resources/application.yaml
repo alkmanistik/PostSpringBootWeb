@@ -13,6 +13,10 @@ spring:
     redis:
       host: localhost
       port: 6379
+  security:
+    user:
+      name: Alk
+      password: 12345
 
 server:
   error:

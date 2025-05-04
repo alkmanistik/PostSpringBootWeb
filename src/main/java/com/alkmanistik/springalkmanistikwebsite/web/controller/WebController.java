@@ -5,10 +5,10 @@ import com.alkmanistik.springalkmanistikwebsite.service.CommentService;
 import com.alkmanistik.springalkmanistikwebsite.service.PostService;
 import com.alkmanistik.springalkmanistikwebsite.web.dto.PostDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("")
@@ -19,13 +19,14 @@ public class WebController {
 
     private final CommentService commentService;
 
-    @GetMapping
+    @GetMapping("/")
     public String indexPage(Model model) {
         model.addAttribute("posts", postService.getAllPosts());
         return "index";
     }
 
     @GetMapping("/posts/new")
+    @PreAuthorize("isAuthenticated()")
     public String newPost(Model model) {
         model.addAttribute("post", new PostDto());
         return "new-post";
@@ -42,6 +43,7 @@ public class WebController {
     }
 
     @PostMapping("/posts")
+    @PreAuthorize("isAuthenticated()")
     public String newPost(@ModelAttribute("post") PostDto postDto) {
         var post = postService.createPost(postDto);
         return "redirect:/posts/" + post.getId();

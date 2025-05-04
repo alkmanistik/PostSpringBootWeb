@@ -7,6 +7,7 @@ import com.alkmanistik.springalkmanistikwebsite.web.dto.PostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +31,14 @@ public class RestApiController {
     }
 
     @PostMapping("/posts")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(postService.createPost(postDto));
     }
 
     @PutMapping("/posts/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PostDto> updatePost(
             @PathVariable Long id,
             @RequestBody PostDto postDto
@@ -44,6 +47,7 @@ public class RestApiController {
     }
 
     @DeleteMapping("/posts/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         postService.deleteById(id);
         commentService.deleteByPostId(id);
@@ -71,6 +75,7 @@ public class RestApiController {
     }
 
     @DeleteMapping("/comments/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         commentService.deleteById(id);
         return ResponseEntity.noContent().build();
